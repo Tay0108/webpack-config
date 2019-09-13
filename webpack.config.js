@@ -1,12 +1,12 @@
-const path = require('path')
-const webpack = require('webpack')
-const minJSON = require('jsonminify')
-const Fiber = require('fibers')
+const path = require('path');
+const webpack = require('webpack');
+const minJSON = require('jsonminify');
+const Fiber = require('fibers');
 
 const plugins = {
   progress: require('webpackbar'),
   clean: (() => {
-    const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+    const { CleanWebpackPlugin } = require('clean-webpack-plugin');
     return CleanWebpackPlugin
   })(),
   extractCSS: require('mini-css-extract-plugin'),
@@ -14,29 +14,25 @@ const plugins = {
   html: require('html-webpack-plugin'),
   copy: require('copy-webpack-plugin'),
   sri: require('webpack-subresource-integrity')
-}
+};
 
 module.exports = (env = {}, argv) => {
-  const isProduction = argv.mode === 'production'
+  const isProduction = argv.mode === 'production';
 
   let config = {
     context: path.resolve(__dirname, 'src'),
 
     entry: {
-      vendor: [
-        './styles/vendor.scss',
-        './scripts/vendor.js'
-      ],
       app: [
-        './styles/app.scss',
-        './scripts/app.js'
+        './css/main.scss',
+        './js/app.js'
       ]
     },
 
     output: {
       path: path.resolve(__dirname, 'dist'),
       publicPath: '',
-      filename: 'scripts/[name].js',
+      filename: 'js/[name].js',
       crossOriginLoading: 'anonymous'
     },
 
@@ -171,7 +167,7 @@ module.exports = (env = {}, argv) => {
     plugins: (() => {
       let common = [
         new plugins.extractCSS({
-          filename: 'styles/[name].css'
+          filename: 'css/[name].css'
         }),
         new plugins.html({
           template: 'index.html',
@@ -200,7 +196,7 @@ module.exports = (env = {}, argv) => {
           hashFuncNames: ['sha384'],
           enabled: true
         })
-      ]
+      ];
 
       const development = [
         new plugins.sync(
@@ -213,7 +209,7 @@ module.exports = (env = {}, argv) => {
             reload: false
           }
         )
-      ]
+      ];
 
       return isProduction
         ? common.concat(production)
@@ -234,7 +230,7 @@ module.exports = (env = {}, argv) => {
     },
 
     stats: 'errors-only'
-  }
+  };
 
   return config
-}
+};
